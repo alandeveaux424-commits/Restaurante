@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>El Dragón Sabroso</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ====== VARIABLES Y RESET ====== */
+        :root {
+            --primary-red: #8B0000; /* Rojo oscuro */
+            --accent-gold: #D4AF37; /* Dorado */
+            --bg-color: #FFF8F0;    /* Crema suave */
+            --text-dark: #333;
+            --text-light: #fff;
+            --shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Lato', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* ====== ENCABEZADO ====== */
+        header {
+            background-color: var(--primary-red);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            border-bottom: 3px solid var(--accent-gold);
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: color 0.3s ease;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        nav a:hover, nav a.active {
+            color: var(--accent-gold);
+            border-bottom: 2px solid var(--accent-gold);
+        }
+
+        /* ====== TIPOGRAFÍA GLOBAL ====== */
+        h1, h2, h3 {
+            font-family: 'Cinzel', serif;
+            color: var(--primary-red);
+        }
+
+        /* ====== SECCIONES (Lógica SPA) ====== */
+        main {
+            flex: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            width: 100%;
+        }
+
+        section {
+            display: none; /* Ocultamos todas por defecto */
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        section.active {
+            display: block; /* Mostramos la activa */
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ====== INICIO (HERO) ====== */
+        .hero {
+            text-align: center;
+            padding: 80px 20px;
+            /* Usando una imagen genérica de Unsplash para que se vea bien si no tienes la local */
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1515669097368-22e68427d265?auto=format&fit=crop&q=80&w=1600');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+        }
+
+        .hero h1 {
+            color: var(--accent-gold);
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 2rem auto;
+        }
+
+        .btn {
+            background-color: var(--accent-gold);
+            color: var(--primary-red);
+            padding: 12px 30px;
+            border: none;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-transform: uppercase;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.6);
+        }
+
+        /* ====== MENÚ ESTILIZADO ====== */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s;
+            border: 1px solid #eee;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+        }
+
+        .card-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background-color: #ddd;
+        }
+
+        .card-body {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .precio {
+            color: var(--primary-red);
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-top: 10px;
+            display: block;
+        }
+
+        /* ====== GALERÍA ====== */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            padding: 20px 0;
+        }
+
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+            height: 250px;
+            box-shadow: var(--shadow);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.1);
+        }
+
+        /* ====== PROMOCIONES ====== */
+        .promo-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .promo-ticket {
+            background-color: white;
+            width: 100%;
+            max-width: 600px;
+            padding: 30px;
+            border: 2px dashed var(--accent-gold);
+            border-radius: 10px;
+            text-align: center;
+            position: relative;
+            box-shadow: var(--shadow);
+        }
+
+        .promo-ticket::before, .promo-ticket::after {
+            content: '';
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background-color: var(--bg-color);
+            border-radius: 50%;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .promo-ticket::before { left: -15px; }
+        .promo-ticket::after { right: -15px; }
+
+        .promo-price {
+            font-size: 2.5rem;
+            color: var(--primary-red);
+            font-weight: bold;
+            font-family: 'Cinzel', serif;
+        }
+
+        /* ====== FOOTER ====== */
+        footer {
+            background-color: #2c0404;
+            color: #bbb;
+            text-align: center;
+            padding: 20px;
+            margin-top: auto;
+            font-size: 0.9rem;
+            border-top: 3px solid var(--accent-gold);
+        }
+
+        footer strong {
+            color: var(--accent-gold);
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .hero h1 { font-size: 2.5rem; }
+            nav { gap: 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <nav>
+        <a onclick="showSection('inicio', this)" class="active">Inicio</a>
+        <a onclick="showSection('menu', this)">Menú</a>
+        <a onclick="showSection('galeria', this)">Galería</a>
+        <a onclick="showSection('promociones', this)">Promociones</a>
+    </nav>
+</header>
+
+<main>
+    <section id="inicio" class="active">
+        <div class="hero">
+            <h1>El Dragón Sabroso</h1>
+            <p>Disfruta auténtica comida china con ingredientes frescos, sabores intensos y un ambiente único.</p>
+            <button class="btn" onclick="showSection('menu', document.querySelectorAll('nav a')[1])">Ver Menú Hoy</button>
+        </div>
+        
+        <div style="text-align: center; margin-top: 40px;">
+            <h2 style="margin-bottom: 20px;">¿Por qué elegirnos?</h2>
+            <div style="display: flex; justify-content: center; gap: 30px; flex-wrap: wrap;">
+                <div style="flex: 1; min-width: 200px; max-width: 300px;">
+                    <h3>Tradición</h3>
+                    <p>Recetas milenarias traídas directamente desde Beijing.</p>
+                </div>
+                <div style="flex: 1; min-width: 200px; max-width: 300px;">
+                    <h3>Frescura</h3>
+                    <p>Ingredientes seleccionados cada mañana en el mercado local.</p>
+                </div>
+                <div style="flex: 1; min-width: 200px; max-width: 300px;">
+                    <h3>Ambiente</h3>
+                    <p>Un espacio diseñado para transportarte a oriente.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+        <!-- SECCIÓN MENÚ -->
+    <section id="menu">
+        <h2 style="text-align: center; font-size: 2.5rem; margin-bottom: 30px;">Nuestro Menú</h2>
+        
+        <div class="menu-grid">
+            <!-- Plato 1 -->
+            <div class="card">
+                <!-- Imagen placeholder de comida -->
+                <img src="/img/pollo-agridulce.jpg" alt="Pollo Agridulce" class="card-img">
+                <div class="card-body">
+                    <h3 class="card-title">Pollo Agridulce</h3>
+                    <p>Crujiente pollo bañado en salsa tradicional con pimientos y piña.</p>
+                    <span class="precio">$110.00</span>
+                </div>
+            </div>
+
+            <!-- Plato 2 -->
+            <div class="card">
+                <img src="/img/te-verde-frío.jpg" alt="Té Verde" class="card-img">
+                <div class="card-body">
+                    <h3 class="card-title">Té Verde Helado</h3>
+                    <p>Bebida refrescante y antioxidante con un toque de miel.</p>
+                    <span class="precio">$30.00</span>
+                </div>
+            </div>
+
+            <!-- Plato 3 -->
+            <div class="card">
+                <img src="/img/Rollito-Platano.jpg" alt="Postre" class="card-img">
+                <div class="card-body">
+                    <h3 class="card-title">Rollitos de Plátano</h3>
+                    <p>Crujientes rollitos elaborados con plátano maduro y rellenos de queso suave, dorados a la perfección.</p>
+                    <span class="precio">$45.00</span>
+                </div>
+            </div>
+            
+            <!-- Plato 4 -->
+            <div class="card">
+                <img src="/img/dumplings.jpg" alt="Dumplings" class="card-img">
+                <div class="card-body">
+                    <h3 class="card-title">Dumplings al Vapor</h3>
+                    <p>Rellenos de cerdo y verduras, servidos con salsa de soja.</p>
+                    <span class="precio">$95.00</span>
+                </div>
+            </div>
+            <!-- Plato 5 -->
+            <div class="card">
+                <img src="/img/rollitos-primavera.jpg" alt="rollitos primavera" class="card-img">
+                <div class="card-body">
+                    <h3 class="card-title">Rollos primavera </h3>
+                    <p>Relleno de verduras, envuelto en una masa fina de harina de trigo</p>
+                    <span class="precio">$80.00</span>
+                </div>
+            </div>
+
+            <!-- Plato 6 -->
+            <div class="card">
+                <img src="/img/Pollo-Kung-Pao.jpg" alt="rollitos primavera" class="card-img">
+                <div class="card-body">
+                    <h3 class="card-title">Pollo kung pao </h3>
+                    <p>Salteado de pollo picante con un sabor complejo que equilibra notas dulces, saladas y de picor.</p>
+                    <span class="precio">$150.00</span>
+                </div>
+            </div>
+
+            <!-- Plato 7 -->
+            <div class="card">
+                <img src="/img/Pollo-Plancha.jpg" alt="rollitos primavera" class="card-img">
+                <div class="card-body">
+                    <h3 class="card-title">Pollo a la Plancha </h3>
+                    <p>Salteado de pollo picante con un sabor complejo que equilibra notas dulces, saladas y de picor.</p>
+                    <span class="precio">$120.00</span>
+                </div>
+            </div>
+
+            <!-- Plato 8 -->
+            <div class="card">
+                <img src="/img/wontons.png" alt="wontons" class="card-img">
+                <div class="card-body">
+                    <h3 class="card-title">Wontons </h3>
+                    <p>Delicados bocados de masa fina rellenos de carne sazonada y verduras frescas.</p>
+                    <span class="precio">$140.00</span>
+                </div>
+            </div>
+
+            <!-- Plato 9 -->
+            <div class="card">
+                <img src="/img/Tofu-ma-po.jpg" alt="Tofu ma po" class="card-img">
+                <div class="card-body">
+                    <h3 class="card-title">Tofu ma po </h3>
+                    <p>Tofu suave cocinado en una salsa picante de Sichuan con carne molida y especias aromáticas.</p>
+                    <span class="precio">$150.00</span>
+                </div>
+            </div>
+
+            <!-- Plato 10 -->
+            <div class="card">
+                <img src="/img/Mooncake.jpg" alt="mooncake" class="card-img">
+                <div class="card-body">
+                    <h3 class="card-title">mooncake </h3>
+                    <p>El mooncake es un pastel chino tradicional y denso, relleno de pasta dulce.</p>
+                    <span class="precio">$45.00</span>
+                </div>
+            </div>
+                
+            <!-- Plato 11 -->
+            <div class="card">
+                <img src="/img/MangoPudding.jpg" alt="mango pudding" class="card-img">
+                <div class="card-body">
+                    <h3 class="card-title">mango pudding </h3>
+                    <p>Elaborado con mango fresco y leche o crema.</p>
+                    <span class="precio">$60.00</span>
+                </div>
+            </div>
+
+            <!-- Plato 12 -->
+            <div class="card">
+                <img src="/img/jian-dui.png" alt="jian dui" class="card-img">
+                <div class="card-body">
+                    <h3 class="card-title">jian dui </h3>
+                    <p> Bolas de masa frita de harina de arroz glutinoso, recubiertas de semillas de sésamo</p>
+                    <span class="precio">$45.00</span>
+                </div>
+            </div>
+             
+            <!-- Plato 13 -->
+            <div class="card">
+                <img src="/img/Refrescos.png" alt="Refrescos" class="card-img">
+                <div class="card-body">
+                    <h3 class="card-title">Refrescos </h3>
+                    <p>Bebidas Refrecantes.</p>
+                    <span class="precio">$25.00</span>
+                </div>
+            </div>
+
+            <!-- Plato 14 -->
+              <div class="card">
+                <img src="/img/Agua.jpg" alt="Agua" class="card-img">
+                <div class="card-body">
+                    <h3 class="card-title">Agua Natural</h3>
+                    <p>Botella de 600ml.</p>
+                    <span class="precio">$10.00</span>
+                </div>
+            </div>
+
+            <!-- Plato 15 -->
+            <div class="card">
+                <img src="/img/JUGOS.jpg" alt="Jugos" class="card-img">
+                <div class="card-body">
+                    <h3 class="card-title">Jugos </h3>
+                    <p>Disfrus de nuestros jugos.</p>
+                    <span class="precio">$20.00</span>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section id="galeria">
+        <h2 style="text-align: center; font-size: 2.5rem; margin-bottom: 20px;">Galería de Fotos</h2>
+        <p style="text-align: center; margin-bottom: 30px;">Un vistazo a nuestros platillos y a nuestro restaurante.</p>
+        
+        <div class="gallery-grid">
+            <div class="gallery-item"><img src="/img/Restaurante-int.png" alt="Restaurante Interior"></div>
+            <div class="gallery-item"><img src="/img/ComidaVar-china.jpg" alt="Comida Variada"></div>
+            <div class="gallery-item"><img src="/img/Chef.jpg" alt="Chef"></div>
+            <div class="gallery-item"><img src="/img/Cocina.png" alt="Cocina"></div>
+            <div class="gallery-item"><img src="/img/Restaurante-ext.png" alt="Exterior"></div>
+            <div class="gallery-item"><img src="/img/Clientes.jpg" alt="Clientes"></div>
+            <div class="gallery-item"><img src="/img/Bebida.jpg" alt="Bebidas"></div>
+            <div class="gallery-item"><img src="/img/Bebida2.jpg" alt="Bebidas 2"></div>
+        </div>
+    </section>
+
+    <section id="promociones">
+        <h2 style="text-align: center; font-size: 2.5rem; margin-bottom: 40px;">Ofertas Especiales</h2>
+        
+        <div class="promo-container">
+            <div class="promo-ticket">
+                <h3 style="color: var(--text-dark); margin-bottom: 10px;">Paquete Familiar</h3>
+                <p>3 platos principales + 3 bebidas + 1 postre grande</p>
+                <hr style="border: 1px solid #eee; margin: 15px 0;">
+                <div class="promo-price">$399</div>
+                <p style="font-size: 0.8rem; color: #777; margin-top: 10px;">*Válido fines de semana</p>
+            </div>
+
+            <div class="promo-ticket">
+                <h3 style="color: var(--text-dark); margin-bottom: 10px;">Hora del Té</h3>
+                <p>2x1 en Té Verde Helado y Caliente</p>
+                <hr style="border: 1px solid #eee; margin: 15px 0;">
+                <div class="promo-price">2x1</div>
+                <p style="font-size: 0.8rem; color: #777; margin-top: 10px;">*Válido Lun-Mié 4pm a 6pm</p>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<footer>
+    <p>Alumno: <strong>Alan</strong> | Materia: Programación Web | Proyecto: Restaurante</p>
+    <p style="font-size: 0.8rem; margin-top: 10px;">&copy; 2024 El Dragón Sabroso. Todos los derechos reservados.</p>
+</footer>
+
+<script>
+    function showSection(sectionId, element) {
+        // 1. Ocultar todas las secciones
+        const sections = document.querySelectorAll('section');
+        sections.forEach(sec => sec.classList.remove('active'));
+
+        // 2. Desactivar todos los links del menú
+        const links = document.querySelectorAll('nav a');
+        links.forEach(link => link.classList.remove('active'));
+
+        // 3. Mostrar la sección deseada
+        document.getElementById(sectionId).classList.add('active');
+        
+        // 4. Activar el link clickeado (si se pasó el elemento)
+        if(element) {
+            element.classList.add('active');
+        }
+    }
+</script>
+
+</body>
+</html>
